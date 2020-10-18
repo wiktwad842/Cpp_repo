@@ -8,9 +8,10 @@ public:
 	Mystring(const Mystring& source);
 	//Mystring(Mystring&& source);
 	Mystring& operator=(const Mystring& rhs); //copy assignment
-	Mystring& operator=(Mystring&& tempStr);
-	Mystring operator-()const;
-	Mystring operator+(const Mystring& strToAdd);
+	Mystring& operator=(Mystring&& tempStr);  //move assignment
+	Mystring operator-()const;				  //lower case 
+	Mystring operator+(const Mystring& strToAdd)const ; //append
+	bool operator==(const Mystring& rhs)const; //equality
 	~Mystring();
 	void display()const;
 	int getLenght()const;

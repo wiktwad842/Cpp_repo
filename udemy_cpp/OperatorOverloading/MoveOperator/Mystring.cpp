@@ -37,7 +37,7 @@ Mystring::Mystring(const Mystring& source)
 //	source.str = nullptr;
 //	cout << "Move constructor used" << endl;
 //}
-Mystring Mystring::operator+(const Mystring& strToAdd) {
+Mystring Mystring::operator+(const Mystring& strToAdd) const{
 
 	size_t buffSize = strlen(str) + strlen(strToAdd.str) + 1;
 	char* buff = new char[buffSize];
@@ -47,6 +47,9 @@ Mystring Mystring::operator+(const Mystring& strToAdd) {
 	delete[]buff;
 	return temp;
 
+}
+bool Mystring::operator==(const Mystring& rhs)const {
+	return(strcmp(str, rhs.str));
 }
 Mystring& Mystring::operator=(const Mystring& rhs) {
 	cout << "Copy assignment" << endl;
