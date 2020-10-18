@@ -37,18 +37,17 @@ Mystring::Mystring(const Mystring& source)
 //	source.str = nullptr;
 //	cout << "Move constructor used" << endl;
 //}
-//Mystring& Mystring::operator+(const Mystring& strToAdd) {
-//	if (strToAdd.str)
-//		return *this;
-//	char* temp = new char[strlen(str)+1];
-//	strcpy(temp, str);
-//	delete[]str;
-//	str = new char[strlen(strToAdd.str) + strlen(temp) + 1];
-//	strcpy(str, temp-1);
-//	strcpy(str + *temp, strToAdd.str);
-//	return *this;
-//
-//}
+Mystring Mystring::operator+(const Mystring& strToAdd) {
+
+	size_t buffSize = strlen(str) + strlen(strToAdd.str) + 1;
+	char* buff = new char[buffSize];
+	strcpy(buff, str);
+	strcat(buff, strToAdd.str);
+	Mystring temp{ buff };
+	delete[]buff;
+	return temp;
+
+}
 Mystring& Mystring::operator=(const Mystring& rhs) {
 	cout << "Copy assignment" << endl;
 	if (this == &rhs)

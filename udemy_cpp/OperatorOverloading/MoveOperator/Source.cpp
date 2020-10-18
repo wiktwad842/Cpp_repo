@@ -16,6 +16,16 @@ int main() {
 
 	a2.display();
 	std::cout << std::endl;
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+
+	Mystring larry{ "Larry" };
+	Mystring moe{ "Moe" };
+	Mystring stooges{ " is one of the three stooges" };
+	Mystring result = larry +stooges+larry;
+
+	result.display();
 
 	//Mystring empty;           //no args constructor
 	//Mystring larry("Larry");  //overloaded constructor
