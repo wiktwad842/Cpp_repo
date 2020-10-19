@@ -10,13 +10,23 @@ private:
 	string imie;
 	string dataUrodzenia;
 };
-class Samochod {
-private:
+
+class Pojazd {
+protected:
 	int id;
 	string marka;
 	string kolor;
 	string licznik;
 };
+
+class Samochod : public Pojazd {
+protected:
+
+};
+
+
+
+
 
 class Relacja {
 private:
