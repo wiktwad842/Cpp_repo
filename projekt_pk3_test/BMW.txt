@@ -1,0 +1,4 @@
+PESEL: 98072001850, imie: Wiktor, nazwisko: Wadas, data urodzenia: 20.07.1998
+PESEL: 88072001851, imie: Janusz, nazwisko: Kowalski, data urodzenia: 14.04.1990
+PESEL: 98072001854, imie: Przemek, nazwisko: Dzban, data urodzenia: 05.07.1998
+PESEL: 68072001859, imie: Krzysztof, nazwisko: Brzysztof, data urodzenia: 20.07.1994
