@@ -13,7 +13,9 @@ protected:
 	int licznik;
 	string kolor;
 public:
-	friend  std::ofstream& operator<<(std::ofstream& os, const Pojazd& account);
+	virtual void print(ofstream& o) const
+	{
+	}
 	virtual bool szukaj_id(const vector<Pojazd*>& bazaPojazdow,int id) const {
 		if (this->id == id) {
 			return true;
@@ -34,7 +36,12 @@ public:
 };
 
 class Samochod : public Pojazd{
-	friend  std::ofstream& operator<<(std::ofstream& os, const Samochod& account);
+protected:
+	virtual void print(ofstream& o) const
+	{
+		o << "Pojazd nr: " << this->id << ", marka: " << this->marka << ", model: " << this->model <<
+			",  stan licznika: " << this->licznik << ", kolor: " << this->kolor << "\n";
+	}
 public:
 	virtual bool szukaj_id(const vector<Pojazd*>& bazaPojazdow, int id) const {
 		cout << "Szukam id samochodu" << endl;
@@ -54,9 +61,14 @@ public:
 
 class Bus : public Pojazd
 {
-	friend std::ofstream& operator<<(std::ofstream& os, const Bus& account);
+	
 protected:
 	double ladownosc;
+	virtual void print(ofstream& o) const
+	{
+		o << "Pojazd nr: " << this->id << ", marka: " << this->marka << ", model: " << this->model <<
+			",  stan licznika: " << this->licznik << ", kolor: " << this->kolor <<", ladownosc: "<<this->ladownosc<< "\n";
+	}
 public:
 
 	virtual bool szukaj_id(const vector<Pojazd*>& bazaPojazdow,int id) const {
@@ -79,6 +91,7 @@ protected:
 	string imie;
 	string nazwisko;
 	string dataUrodzenia;
+	
 public:
 	Osoba(string PESEL, string imie, string nazwisko, string dataUrodzenia) 
 		: PESEL{ PESEL }, imie{ imie }, nazwisko{ nazwisko }, dataUrodzenia{dataUrodzenia}{
@@ -104,23 +117,28 @@ public:
 
 
 };
-std::ofstream& operator<<(std::ofstream& os, const Pojazd& pojazd) {
-	os << "Pojazd nr: " << pojazd.id << ", marka: " << pojazd.marka << ", model: " << pojazd.model << ",  stan licznika: " << pojazd.licznik << ", kolor: " << pojazd.kolor << "\n";
-	return os;
-}
-
-std::ofstream& operator<<(std::ofstream& os, const Samochod& pojazd) {
-	os << "Pojazd nr: " << pojazd.id << ", marka: " << pojazd.marka << ", model: " << pojazd.model << ",  stan licznika: " << pojazd.licznik << ", kolor: " << pojazd.kolor << "\n";
-	return os;
-}
-
-std::ofstream& operator<<(std::ofstream& os, const Bus& pojazd) {
-	os << "Pojazd nr: " << pojazd.id << ", marka: " << pojazd.marka << ", model: " << pojazd.model << ",  stan licznika: " << pojazd.licznik << ", kolor: " << pojazd.kolor << ", ladownosc: " << pojazd.ladownosc << "\n";
-	return os;
-}
+//std::ofstream& operator<<(std::ofstream& os, const Pojazd& pojazd) {
+//	os << "Pojazd nr: " << pojazd.id << ", marka: " << pojazd.marka << ", model: " << pojazd.model << ",  stan licznika: " << pojazd.licznik << ", kolor: " << pojazd.kolor << "\n";
+//	return os;
+//}
+//
+//std::ofstream& operator<<(std::ofstream& os, const Samochod& pojazd) {
+//	os << "Pojazd nr: " << pojazd.id << ", marka: " << pojazd.marka << ", model: " << pojazd.model << ",  stan licznika: " << pojazd.licznik << ", kolor: " << pojazd.kolor << "\n";
+//	return os;
+//}
+//
+//std::ofstream& operator<<(std::ofstream& os, const Bus& pojazd) {
+//	os << "Pojazd nr: " << pojazd.id << ", marka: " << pojazd.marka << ", model: " << pojazd.model << ",  stan licznika: " << pojazd.licznik << ", kolor: " << pojazd.kolor << ", ladownosc: " << pojazd.ladownosc << "\n";
+//	return os;
+//}
 std::ofstream& operator<<(std::ofstream& os, const Osoba& osoba) {
 	os << "PESEL: " << osoba.PESEL << ", imie: " << osoba.imie << ", nazwisko: " << osoba.nazwisko << ", data urodzenia: " << osoba.dataUrodzenia  << "\n";
 	return os;
+}
+std::ofstream& operator<< (std::ofstream& o, const Pojazd& b)
+{
+	b.print(o); 
+	return o;
 }
 
 class Relacja {
