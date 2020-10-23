@@ -190,7 +190,7 @@ public:
 		o >> id >> marka >> model >> licznik >> kolor;
 	}
 	virtual bool szukaj_id( int id) const override{
-		cout << "Szukam id samochodu" << endl;
+		//cout << "Szukam id samochodu" << endl;
 		if (Pojazd::szukaj_id(id)) {
 			return true;
 		}
@@ -223,7 +223,7 @@ public:
 		o >> id >> marka >> model >> licznik >> kolor >> ladownosc;
 	}
 	virtual bool szukaj_id(int id) const {
-		cout << "Szukam id busa" << endl;
+		//cout << "Szukam id busa" << endl;
 		if (Pojazd::szukaj_id(id)) {
 			return true;
 		}
@@ -349,6 +349,7 @@ Osoba(const Osoba& source)
 };
 
 class Relacja {
+	friend  std::ifstream& operator>>(std::ifstream& os, Relacja& relacja);
 private:
 	string PESEL;
 	int id;
@@ -380,20 +381,19 @@ std::ofstream& operator<<(std::ofstream& os, const Osoba& osoba) {
 	os << "PESEL: " << osoba.PESEL << ", imie: " << osoba.imie << ", nazwisko: " << osoba.nazwisko << ", data urodzenia: " << osoba.dataUrodzenia  << "\n";
 	return os;
 }
-std::ifstream& operator>>(std::ifstream& os, Osoba& osoba) {
-	os >> osoba.PESEL >> osoba.imie >> osoba.nazwisko >> osoba.dataUrodzenia;
-	return os;
+std::ifstream& operator>>(std::ifstream& is, Osoba& osoba) {
+	is >> osoba.PESEL >> osoba.imie >> osoba.nazwisko >> osoba.dataUrodzenia;
+	return is;
 }
 std::ofstream& operator<< (std::ofstream& o, const Pojazd& b)
 {
 	b.print(o); 
 	return o;
 }
-//std::ifstream& operator>> (std::ifstream& o,Pojazd& b)
-//{
-//	b.read(o);
-//	return o;
-//}
+std::ifstream& operator>>(std::ifstream& is, Relacja& relacja) {
+	is >> relacja.PESEL >> relacja.id;
+	return is;
+}
 
 
 
@@ -405,6 +405,7 @@ MojWektor<Pojazd*>& samochodyOsobyZpodanymPESEL(char* podanyPESEL, const MojWekt
 				int tempId{ relacja.szukajIdDlaPESEL(podanyPESEL) };
 				for (auto pojazd : bazaPojazdow) {
 					if (pojazd->szukaj_id(tempId)) {
+
 						pojazdyWynikowy.push_back(pojazd);
 					}
 				}
@@ -414,149 +415,42 @@ MojWektor<Pojazd*>& samochodyOsobyZpodanymPESEL(char* podanyPESEL, const MojWekt
 	//delete[] temp;
 	return pojazdyWynikowy;
 }
+
 MojWektor<Osoba>& osobyZpojazdemPodanejMarki(string podanaMarka, const MojWektor<Pojazd*>& bazaPojazdow, const MojWektor<Osoba>& bazaOsob,
-	const MojWektor<Relacja>& bazaRelacji, MojWektor<Osoba>& osobyWynikowy) {
-	for (auto pojazd : bazaPojazdow) {
-		if (pojazd->getMarka() == podanaMarka) {
-			for (auto relacja : bazaRelacji) {
+	const MojWektor<Relacja>& bazaRelacji, MojWektor<Osoba>& osobyWynikowy) 
+{
+	for (auto pojazd : bazaPojazdow){
+		if (pojazd->getMarka() == podanaMarka){
+			for (auto relacja : bazaRelacji){
 				char* temp = new char[12];
 				strcpy(temp, relacja.szukajPESELDlaId(pojazd->getId()).c_str());
-				for (auto osoba : bazaOsob) {
-					if (osoba.szukajPesel(temp)) {
+				for (auto osoba : bazaOsob){
+					if (osoba.szukajPesel(temp)){
 						bool duplikat{ false };
-						if (osobyWynikowy.size() == 0) {
+						if (osobyWynikowy.size() == 0){
 
 							osobyWynikowy.push_back(osoba);
 						}
-						else {
+						else{
 
-						for (auto osobaWynikowa : osobyWynikowy) {
-							if (osoba.getPESEL() == osobaWynikowa.getPESEL()) {
-								duplikat = true;
+							for (auto osobaWynikowa : osobyWynikowy){
+								if (osoba.getPESEL() != osobaWynikowa.getPESEL())
+									duplikat = true;
+								
 							}
+							if (!duplikat)
+								osobyWynikowy.push_back(osoba);
 						}
-						if (!duplikat)
-							osobyWynikowy.push_back(osoba);
-
-
-					}
-				}
-				}
-				delete[] temp;
+					}	
+				}delete[] temp;
 			}
-		
 		}
 	}
-	
 	return osobyWynikowy;
 }
 
-
-
-int main() {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-	
-	
-	MojWektor<Relacja> bazaRelacji;
-	MojWektor<Pojazd*> pojazdyWynikowy;
-	MojWektor<Osoba> OsobyWynikowy;
-
-
-	//Pojazd* ptr = new Samochod(1, "BMW", "E46", 10000, "czerwony");
-	//Pojazd* ptr2 = new Samochod(2, "Volvo", "E66", 20000, "niebieski");
-	//Pojazd* ptr3 = new Samochod(3, "BMW", "E96", 30000, "zielony");
-	//Pojazd* ptr4 = new Bus(4, "BMW", "E46", 43000, "czerwony", 3000.0);
-
-	//char* tempPESEL1 = new char[12]{ "98072001850" };
-	//char* tempPESEL2 = new char[12]{ "88072001851" };
-	//char* tempPESEL3 = new char[12]{ "98072001854" };
-	//char* tempPESEL4 = new char[12]{ "68072001859" };
-
-	//char* tempImie1 = new char[7]{ "Wiktor" };
-	//char* tempImie2 = new char[7]{ "Janusz" };
-	//char* tempImie3 = new char[8]{ "Przemek" };
-	//char* tempImie4 = new char[10]{ "Krzysztof" };
-
-	//char* tempNazwisko1 = new char[6]{ "Wadas" };
-	//char* tempNazwisko2 = new char[9]{ "Kowalski" };
-	//char* tempNazwisko3 = new char[6]{ "Dzban" };
-	//char* tempNazwisko4 = new char[10]{ "Brzysztof" };
-
-	//char* tempDataUrodzenia1 = new char[11]{ "20.07.1998" };
-	//char* tempDataUrodzenia2 = new char[11]{ "14.04.1990" };
-	//char* tempDataUrodzenia3 = new char[11]{ "05.07.1998" };
-	//char* tempDataUrodzenia4 = new char[11]{ "20.07.1994" };
-
-	
-
-
-	//Osoba osoba1(tempPESEL1,tempImie1,tempNazwisko1,tempDataUrodzenia1);
-	//Osoba osoba2(tempPESEL2, tempImie2, tempNazwisko2, tempDataUrodzenia2);
-	//Osoba osoba3(tempPESEL3, tempImie3, tempNazwisko3, tempDataUrodzenia3);
-	//Osoba osoba4(tempPESEL4, tempImie4, tempNazwisko4, tempDataUrodzenia4);
-
-	//Osoba* osoba1 = new Osoba(tempPESEL1, tempImie1, tempNazwisko1, tempDataUrodzenia1);
-	//Osoba* osoba2 = new Osoba(tempPESEL2, tempImie2, tempNazwisko2, tempDataUrodzenia2);
-	//Osoba* osoba3 = new Osoba(tempPESEL3, tempImie3, tempNazwisko3, tempDataUrodzenia3);
-	//Osoba* osoba4 = new Osoba(tempPESEL4, tempImie4, tempNazwisko4, tempDataUrodzenia4);
-
-	//Osoba osoba1(tempPESEL1, tempImie1, tempNazwisko1, tempDataUrodzenia1);
-	//Osoba osoba2(tempPESEL2, tempImie2, tempNazwisko2, tempDataUrodzenia2);
-	//Osoba osoba3(tempPESEL3, tempImie3, tempNazwisko3, tempDataUrodzenia3);
-	//Osoba osoba4(tempPESEL4, tempImie4, tempNazwisko4, tempDataUrodzenia4);
-
-	
-	//osoba1->~Osoba();
-	//delete osoba1;
-	//osoba2->~Osoba();
-	//osoba3->~Osoba();
-	//osoba4->~Osoba();
-
-	/*delete osoba1;
-	delete osoba2;
-	delete osoba3;
-	delete osoba4;*/
-
-	///*Osoba osoba2("88072001851", "Janusz", "Kowalski", "14.04.1990");
-	//* 
-	//Osoba osoba3("98072001854", "Przemek", "Dzban", "05.07.1998");
-	//Osoba osoba4("68072001859", "Krzysztof", "Brzysztof", "20.07.1994");*/
-
-	Relacja relacja1("98072001850", 1);
-	Relacja relacja2("88072001851", 1);
-	Relacja relacja3("98072001850", 2);
-	Relacja relacja4("98072001854", 1);
-	Relacja relacja5("68072001859", 4);
-	Relacja relacja6("68072001859", 3);
-
-	//bazaOsob.push_back(osoba1);
-	//bazaOsob.push_back(osoba2);
-	//bazaOsob.push_back(osoba3);
-	//bazaOsob.push_back(osoba4);
-
-
-
-	//bazaPojazdow.push_back(ptr);
-	//bazaPojazdow.push_back(ptr2);
-	//bazaPojazdow.push_back(ptr3);
-	//bazaPojazdow.push_back(ptr4);
-
-
-	bazaRelacji.push_back(relacja1);
-	bazaRelacji.push_back(relacja2);
-	bazaRelacji.push_back(relacja3);
-	bazaRelacji.push_back(relacja4);
-	bazaRelacji.push_back(relacja5);
-	bazaRelacji.push_back(relacja6);
-
-	char* podanyPESEL = new char[12] {"68072001859"};
-	string podanaMarka = "Volvo";
-
-
-	MojWektor<Osoba> bazaOsob;
-
-
+MojWektor<Osoba>& wczytajBazeOsob(MojWektor<Osoba>&bazaOsob) {
+	MojWektor<Osoba> temp;
 	ifstream bazaOsobPlik;
 	bazaOsobPlik.open("bazaOsobPlik.txt");
 	while (bazaOsobPlik) {
@@ -581,7 +475,7 @@ int main() {
 		strcpy(tempData, tempData_str.c_str());
 
 		Osoba tempOsoba{ tempPESEL,tempImie ,tempNazwisko,tempData };
-		if(tempPESEL_str.length()!=0)
+		if (tempPESEL_str.length() != 0)
 			bazaOsob.push_back(tempOsoba);
 		/*bazaOsobPlik >> tempImie;
 		bazaOsobPlik >> tempNazwisko;
@@ -592,22 +486,15 @@ int main() {
 		delete[]tempNazwisko;
 		delete[]tempData;
 		//delete &tempOsoba;
-		
+
 	}
 	bazaOsobPlik.close();
+	return bazaOsob;
+}
 
-	//delete &bazaOsob;
-
-	//bazaOsob = wczytajBazeOsob(bazaOsob);
-	/*for (auto osoba : bazaOsob) {
-		cout << osoba.getPESEL() << " " << osoba.getImie() << " " << osoba.getNazwisko() << " " << osoba.getData() << endl;
-	}*/
-	
-	
-
+MojWektor<Pojazd*>& wczytajBazePojazdow(MojWektor<Pojazd*>& bazaPojazdow) {
 	ifstream bazaPojazdowPlik;
 	bazaPojazdowPlik.open("bazaPojazdowPlik.txt");
-	MojWektor<Pojazd*> bazaPojazdow;
 
 	while (bazaPojazdowPlik) {
 		string rodzaj;
@@ -644,14 +531,175 @@ int main() {
 
 	}
 	bazaPojazdowPlik.close();
-	for (auto pojazd : bazaPojazdow) {
-		cout << pojazd->getId()<<" " <<pojazd->getMarka() << endl;
+	return bazaPojazdow;
+}
+
+MojWektor<Relacja>& wczytajBazeRelacji(MojWektor<Relacja>& bazaRelacji) {
+
+	ifstream bazaRelacjiPlik;
+	bazaRelacjiPlik.open("bazaRelacji.txt");
+
+	while (bazaRelacjiPlik) {
+		Relacja temp;
+		bazaRelacjiPlik >> temp;
+		bazaRelacji.push_back(temp);
 	}
+	bazaRelacjiPlik.close();
+	return bazaRelacji;
+}
+int main() {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+	/*Relacja relacja1("98072001850", 1);
+	Relacja relacja2("88072001851", 1);
+	Relacja relacja3("98072001850", 2);
+	Relacja relacja4("98072001854", 1);
+	Relacja relacja5("68072001859", 4);
+	Relacja relacja6("68072001859", 3);*/
+
+	//bazaOsob.push_back(osoba1);
+	//bazaOsob.push_back(osoba2);
+	//bazaOsob.push_back(osoba3);
+	//bazaOsob.push_back(osoba4);
+
+
+
+	//bazaPojazdow.push_back(ptr);
+	//bazaPojazdow.push_back(ptr2);
+	//bazaPojazdow.push_back(ptr3);
+	//bazaPojazdow.push_back(ptr4);
+
+
+	//bazaRelacji.push_back(relacja1);
+	//bazaRelacji.push_back(relacja2);
+	//bazaRelacji.push_back(relacja3);
+	//bazaRelacji.push_back(relacja4);
+	//bazaRelacji.push_back(relacja5);
+	//bazaRelacji.push_back(relacja6);
+
+	char* podanyPESEL = new char[12] {"68072001859"};
+	string podanaMarka = "BMW";
+
+	MojWektor<Relacja> bazaRelacji;
+
+	MojWektor<Osoba> bazaOsob;
+
+	MojWektor<Pojazd*> bazaPojazdow;
+
+	MojWektor<Pojazd*> pojazdyWynikowy;
+
+	MojWektor<Osoba> OsobyWynikowy;
+
+	wczytajBazeOsob(bazaOsob);
+
+	wczytajBazePojazdow(bazaPojazdow);
+
+	wczytajBazeRelacji(bazaRelacji);
 
 	samochodyOsobyZpodanymPESEL(podanyPESEL, bazaPojazdow, bazaOsob, bazaRelacji, pojazdyWynikowy);
-	
+
 	osobyZpojazdemPodanejMarki(podanaMarka, bazaPojazdow, bazaOsob, bazaRelacji, OsobyWynikowy);
 
+	ofstream myfile;
+	myfile.open("68072001859.txt");
+	for (auto pojazd : pojazdyWynikowy) {
+		myfile << *pojazd;
+	}
+	myfile.close();
+
+	ofstream myfile2;
+	myfile.open("BMW.txt");
+	for (auto osoba : OsobyWynikowy) {
+		myfile << osoba;
+	}
+	myfile.close();
+	//wczytajBazeOsob(bazaOsob);
+	//ifstream bazaOsobPlik;
+	//bazaOsobPlik.open("bazaOsobPlik.txt");
+	//while (bazaOsobPlik) {
+	//	string tempPESEL_str;
+	//	string tempImie_str;
+	//	string tempNazwisko_str;
+	//	string tempData_str;
+
+	//	bazaOsobPlik >> tempPESEL_str;
+	//	bazaOsobPlik >> tempImie_str;
+	//	bazaOsobPlik >> tempNazwisko_str;
+	//	bazaOsobPlik >> tempData_str;
+
+	//	char* tempPESEL = new char[tempPESEL_str.length() + 1];
+	//	char* tempImie = new char[tempImie_str.length() + 1];
+	//	char* tempNazwisko = new char[tempNazwisko_str.length() + 1];
+	//	char* tempData = new char[tempData_str.length() + 1];
+
+	//	strcpy(tempPESEL, tempPESEL_str.c_str());
+	//	strcpy(tempImie, tempImie_str.c_str());
+	//	strcpy(tempNazwisko, tempNazwisko_str.c_str());
+	//	strcpy(tempData, tempData_str.c_str());
+
+	//	Osoba tempOsoba{ tempPESEL,tempImie ,tempNazwisko,tempData };
+	//	if(tempPESEL_str.length()!=0)
+	//		bazaOsob.push_back(tempOsoba);
+	//	/*bazaOsobPlik >> tempImie;
+	//	bazaOsobPlik >> tempNazwisko;
+	//	bazaOsobPlik >> tempData;*/
+	//	/*tempPESEL.c_str();*/
+	//	delete[]tempPESEL;
+	//	delete[]tempImie;
+	//	delete[]tempNazwisko;
+	//	delete[]tempData;
+	//	//delete &tempOsoba;
+	//	
+	//}
+	//bazaOsobPlik.close();
+
+	//delete &bazaOsob;
+
+	//bazaOsob = wczytajBazeOsob(bazaOsob);
+	
+	
+	
+
+	//ifstream bazaPojazdowPlik;
+	//bazaPojazdowPlik.open("bazaPojazdowPlik.txt");
+	//MojWektor<Pojazd*> bazaPojazdow;
+
+	//while (bazaPojazdowPlik) {
+	//	string rodzaj;
+	//	int id;
+	//	string marka;
+	//	string model;
+	//	int licznik;
+	//	string kolor;
+	//	double ladownosc;
+	//	bazaPojazdowPlik >> rodzaj;
+	//	if (rodzaj == "samochod") {
+	//		bazaPojazdowPlik >> id;
+	//		bazaPojazdowPlik >> marka;
+	//		bazaPojazdowPlik >> model;
+	//		bazaPojazdowPlik >> licznik;
+	//		bazaPojazdowPlik >> kolor;
+	//		Pojazd* samochod = new Samochod{ id,marka,model,licznik,kolor };
+	//		bazaPojazdow.push_back(samochod);
+	//		//samochod->~Pojazd();
+	//		//delete samochod;
+	//	}
+	//	if (rodzaj == "bus") {
+	//		bazaPojazdowPlik >> id;
+	//		bazaPojazdowPlik >> marka;
+	//		bazaPojazdowPlik >> model;
+	//		bazaPojazdowPlik >> licznik;
+	//		bazaPojazdowPlik >> kolor;
+	//		bazaPojazdowPlik >> ladownosc;
+	//		Pojazd* bus = new Bus{ id, marka, model, licznik, kolor, ladownosc };
+	//		bazaPojazdow.push_back(bus);
+	//		//(*bus).~Pojazd();
+	//		//delete bus;
+	//	}
+
+	//}
+	//bazaPojazdowPlik.close();
+	
 	/*for (auto osoba : OsobyWynikowy) {
 	* 
 		cout << osoba.getPESEL() << " " << osoba.getImie() << " " << osoba.getNazwisko() << " " << osoba.getData() << endl;
@@ -669,21 +717,7 @@ int main() {
 		cout << osoba.getFullName() << endl;
 	}*/
 
-	ofstream myfile;
-	///string plik = podanyPESEL+".txt";
-	myfile.open("68072001859.txt");
-	for (auto pojazd : pojazdyWynikowy) {
-		myfile << *pojazd;
-	}
-		myfile.close();
-
-	ofstream myfile2;
-	////string plik = podanyPESEL+".txt";
-	myfile.open("BMW.txt");
-	for (auto osoba : OsobyWynikowy) {
-		myfile << osoba;
-	}
-		myfile.close();
+	
 
 	/*for (auto osoba : OsobyWynikowy) {
 			osoba.~Osoba();
