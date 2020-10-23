@@ -71,6 +71,7 @@ public:
 	iterator end() const;
 
 	~MojWektor() {
+		if(arr)
 		delete[] arr;
 	}
 };
@@ -167,6 +168,7 @@ public:
 		:id{ id }, marka{ marka }, model{ model }, licznik{ licznik }, kolor{ kolor }{
 	//	cout << "Konstruktor dla pojazdu" << endl;
 	}
+
 	int getId() {
 		return this->id;
 	}
@@ -176,8 +178,9 @@ public:
 };
 
 class Samochod : public Pojazd{
-protected:
-	virtual void print(ofstream& o) const 
+
+public:
+	virtual void print(ofstream& o) const
 	{
 		o << "Pojazd nr: " << this->id << ", marka: " << this->marka << ", model: " << this->model <<
 			",  stan licznika: " << this->licznik << ", kolor: " << this->kolor << "\n";
@@ -186,7 +189,6 @@ protected:
 	{
 		o >> id >> marka >> model >> licznik >> kolor;
 	}
-public:
 	virtual bool szukaj_id( int id) const override{
 		cout << "Szukam id samochodu" << endl;
 		if (Pojazd::szukaj_id(id)) {
@@ -209,17 +211,17 @@ class Bus : public Pojazd
 	
 protected:
 	double ladownosc;
+	
+public:
 	virtual void print(ofstream& o) const
 	{
 		o << "Pojazd nr: " << this->id << ", marka: " << this->marka << ", model: " << this->model <<
-			",  stan licznika: " << this->licznik << ", kolor: " << this->kolor <<", ladownosc: "<<this->ladownosc<< "\n";
+			",  stan licznika: " << this->licznik << ", kolor: " << this->kolor << ", ladownosc: " << this->ladownosc << "\n";
 	}
 	virtual void read(ifstream& o)
 	{
 		o >> id >> marka >> model >> licznik >> kolor >> ladownosc;
 	}
-public:
-
 	virtual bool szukaj_id(int id) const {
 		cout << "Szukam id busa" << endl;
 		if (Pojazd::szukaj_id(id)) {
@@ -267,13 +269,13 @@ public:
 		//cout << "Konstruktor wieloargumentowy osoby" << endl;
 	}
 	~Osoba() {
-		//if (PESEL)
+		if (PESEL)
 			delete[] PESEL;
-		//if (imie)
+		if (imie)
 			delete[] imie;
-		//if (nazwisko)
+		if (nazwisko)
 			delete[] nazwisko;
-		//if (dataUrodzenia)
+		if (dataUrodzenia)
 			delete[] dataUrodzenia;
 			//cout << "Destruktor osoby" << endl;
 	}
@@ -427,17 +429,18 @@ MojWektor<Osoba>& osobyZpojazdemPodanejMarki(string podanaMarka, const MojWektor
 							osobyWynikowy.push_back(osoba);
 						}
 						else {
-							for (auto osobaWynikowa : osobyWynikowy) {
-								if (osoba.getPESEL() == osobaWynikowa.getPESEL()) {
-									duplikat = true;
-								}
-							}
-							if (!duplikat) {
 
-								osobyWynikowy.push_back(osoba);
+						for (auto osobaWynikowa : osobyWynikowy) {
+							if (osoba.getPESEL() == osobaWynikowa.getPESEL()) {
+								duplikat = true;
 							}
 						}
+						if (!duplikat)
+							osobyWynikowy.push_back(osoba);
+
+
 					}
+				}
 				}
 				delete[] temp;
 			}
@@ -547,7 +550,7 @@ int main() {
 	bazaRelacji.push_back(relacja5);
 	bazaRelacji.push_back(relacja6);
 
-	char* podanyPESEL = new char[] {"68072001859"};
+	char* podanyPESEL = new char[12] {"68072001859"};
 	string podanaMarka = "Volvo";
 
 
@@ -578,7 +581,8 @@ int main() {
 		strcpy(tempData, tempData_str.c_str());
 
 		Osoba tempOsoba{ tempPESEL,tempImie ,tempNazwisko,tempData };
-		bazaOsob.push_back(tempOsoba);
+		if(tempPESEL_str.length()!=0)
+			bazaOsob.push_back(tempOsoba);
 		/*bazaOsobPlik >> tempImie;
 		bazaOsobPlik >> tempNazwisko;
 		bazaOsobPlik >> tempData;*/
@@ -595,9 +599,9 @@ int main() {
 	//delete &bazaOsob;
 
 	//bazaOsob = wczytajBazeOsob(bazaOsob);
-	for (auto osoba : bazaOsob) {
+	/*for (auto osoba : bazaOsob) {
 		cout << osoba.getPESEL() << " " << osoba.getImie() << " " << osoba.getNazwisko() << " " << osoba.getData() << endl;
-	}
+	}*/
 	
 	
 
@@ -634,9 +638,10 @@ int main() {
 			bazaPojazdowPlik >> ladownosc;
 			Pojazd* bus = new Bus{ id, marka, model, licznik, kolor, ladownosc };
 			bazaPojazdow.push_back(bus);
-			//bus->~Pojazd();
+			//(*bus).~Pojazd();
 			//delete bus;
 		}
+
 	}
 	bazaPojazdowPlik.close();
 	for (auto pojazd : bazaPojazdow) {
@@ -646,14 +651,16 @@ int main() {
 	samochodyOsobyZpodanymPESEL(podanyPESEL, bazaPojazdow, bazaOsob, bazaRelacji, pojazdyWynikowy);
 	
 	osobyZpojazdemPodanejMarki(podanaMarka, bazaPojazdow, bazaOsob, bazaRelacji, OsobyWynikowy);
-	for (auto osoba : OsobyWynikowy) {
+
+	/*for (auto osoba : OsobyWynikowy) {
+	* 
 		cout << osoba.getPESEL() << " " << osoba.getImie() << " " << osoba.getNazwisko() << " " << osoba.getData() << endl;
-	}
+	}*/
 	//osobyZpojazdemPodanejMarki(podanaMarka, bazaPojazdow, bazaOsob, bazaRelacji, OsobyWynikowy);
-	cout << "pojazdy wynikowe" << endl;
+	/*cout << "pojazdy wynikowe" << endl;
 	for (auto pojazd : pojazdyWynikowy) {
 		cout << pojazd->getId() << " " << pojazd->getMarka() << endl;
-	}
+	}*/
 
 	//for (auto pojazd : pojazdyWynikowy) {
 	//	cout << pojazd->getId() << endl;
@@ -678,19 +685,19 @@ int main() {
 	}
 		myfile.close();
 
-	//for (auto osoba : OsobyWynikowy) {
-	//		osoba.~Osoba();
-	//}
-	//for (auto osoba : bazaOsob) {
-	//	osoba.~Osoba();
-	//}
+	/*for (auto osoba : OsobyWynikowy) {
+			osoba.~Osoba();
+	}
+	for (auto osoba : bazaOsob) {
+		osoba.~Osoba();
+	}*/
 	for (auto pojazd : bazaPojazdow) {
-		pojazd->~Pojazd();
+		delete [] pojazd;
 	}
-	for (auto pojazd : pojazdyWynikowy) {
-		pojazd->~Pojazd();
-	}
-	//delete bazaPojazdow;
+	/*for (auto pojazd : pojazdyWynikowy) {
+		delete[] pojazd;
+	}*/
+	//delete &bazaPojazdow;
 
 	/*delete[] tempDataUrodzenia1;
 	delete[] tempDataUrodzenia2;
