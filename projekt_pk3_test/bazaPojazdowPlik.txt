@@ -1,0 +1,7 @@
+samochod 1 Volvo 740 20000 brazowy
+samochod 2 Ford Ka 46000 fioletowy
+bus 4 BMW E46 43000 czerwony 3000
+samochod 3 BMW E96 30000 zielony
+samochod 5 Audi A4 300 zloty
+samochod 6 Lamborghini Gallardo 40000 zolty
+bus 7 Ford Transit 5000 bialy 3000
