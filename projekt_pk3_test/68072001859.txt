@@ -1,2 +1,0 @@
-Pojazd nr: 4, marka: BMW, model: E46,  stan licznika: 43000, kolor: czerwony, ladownosc: 3000
-Pojazd nr: 3, marka: BMW, model: E96,  stan licznika: 30000, kolor: zielony

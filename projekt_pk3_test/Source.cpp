@@ -9,11 +9,7 @@
 
 #pragma warning(disable:4996)
 using namespace std;
-#define ll long long 
-using namespace std;
 
-// Template class to create MojWektor of 
-// different data_type 
 template <typename TypDanych>
 class MojWektor {
 private:
@@ -76,16 +72,12 @@ public:
 	}
 };
 
-// Template class to return the size of 
-// MojWektor of different data_type 
 template <typename TypDanych>
 MojWektor<TypDanych>::MojWektor(int n)
 	: dlugosc(n), arr(new TypDanych[n]), iloscObiektow(0)
 {
 }
 
-// Template class to insert the element 
-// in MojWektor 
 template <typename TypDanych>
 int MojWektor<TypDanych>::push_back(TypDanych data)
 {
@@ -99,16 +91,12 @@ int MojWektor<TypDanych>::push_back(TypDanych data)
 	return iloscObiektow;
 }
 
-
-// Template class to return the size of 
-// MojWektor 
 template <typename TypDanych>
 int MojWektor<TypDanych>::size() const
 {
 	return iloscObiektow;
 }
 
-// Template class to return begin iterator 
 template <typename TypDanych>
 typename MojWektor<TypDanych>::iterator
 MojWektor<TypDanych>::begin() const
@@ -116,28 +104,12 @@ MojWektor<TypDanych>::begin() const
 	return iterator(arr);
 }
 
-// Template class to return end iterator 
 template <typename TypDanych>
 typename MojWektor<TypDanych>::iterator
 MojWektor<TypDanych>::end() const
 {
 	return iterator(arr + iloscObiektow);
 }
-
-// Template class to display element in 
-// MojWektor 
-template <typename V>
-void display_vector(V& v)
-{
-	// Declare iterator 
-	typename V::iterator ptr;
-	for (ptr = v.begin(); ptr != v.end(); ptr++) {
-		cout << *ptr << ' ';
-	}
-	cout << '\n';
-}
-
-
 
 class Pojazd {
 	friend  std::ofstream& operator<<(std::ofstream& os, const Pojazd& pojazd);
@@ -381,24 +353,27 @@ std::ofstream& operator<<(std::ofstream& os, const Osoba& osoba) {
 	os << "PESEL: " << osoba.PESEL << ", imie: " << osoba.imie << ", nazwisko: " << osoba.nazwisko << ", data urodzenia: " << osoba.dataUrodzenia  << "\n";
 	return os;
 }
+
 std::ifstream& operator>>(std::ifstream& is, Osoba& osoba) {
 	is >> osoba.PESEL >> osoba.imie >> osoba.nazwisko >> osoba.dataUrodzenia;
 	return is;
 }
+
 std::ofstream& operator<< (std::ofstream& o, const Pojazd& b)
 {
 	b.print(o); 
 	return o;
 }
+
 std::ifstream& operator>>(std::ifstream& is, Relacja& relacja) {
 	is >> relacja.PESEL >> relacja.id;
 	return is;
 }
 
-
-
-MojWektor<Pojazd*>& samochodyOsobyZpodanymPESEL(char* podanyPESEL, const MojWektor<Pojazd*>& bazaPojazdow,const MojWektor<Osoba> &bazaOsob,
+MojWektor<Pojazd*>& samochodyOsobyZpodanymPESEL(string podanyPESEL_str, const MojWektor<Pojazd*>& bazaPojazdow,const MojWektor<Osoba> &bazaOsob,
 											 const MojWektor<Relacja>& bazaRelacji, MojWektor<Pojazd*>& pojazdyWynikowy) {
+	char* podanyPESEL = new char[podanyPESEL_str.length() + 1];
+	strcpy(podanyPESEL, podanyPESEL_str.c_str());
 	for (auto osoba : bazaOsob) {
 		if (osoba.szukajPesel(podanyPESEL)) {
 			for (auto relacja : bazaRelacji) {
@@ -412,7 +387,8 @@ MojWektor<Pojazd*>& samochodyOsobyZpodanymPESEL(char* podanyPESEL, const MojWekt
 			}
 		}
 	}
-	//delete[] temp;
+	delete[] podanyPESEL;
+	
 	return pojazdyWynikowy;
 }
 
@@ -547,38 +523,30 @@ MojWektor<Relacja>& wczytajBazeRelacji(MojWektor<Relacja>& bazaRelacji) {
 	bazaRelacjiPlik.close();
 	return bazaRelacji;
 }
+
+void zapiszPojazdy(MojWektor<Pojazd*>&wektorPojazdow,string nazwaPliku) {
+	nazwaPliku += ".txt";
+	ofstream myfile;
+	myfile.open(nazwaPliku);
+	for (auto pojazd : wektorPojazdow) {
+		myfile << *pojazd;
+	}
+	myfile.close();
+}
+
+void zapiszOsoby(MojWektor<Osoba>& wektorOsob, string nazwaPliku) {
+	nazwaPliku += ".txt";
+	ofstream myfile2;
+	myfile2.open(nazwaPliku);
+	for (auto osoba : wektorOsob) {
+		myfile2 << osoba;
+	}
+	myfile2.close();
+}
+
 int main() {
+
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-	/*Relacja relacja1("98072001850", 1);
-	Relacja relacja2("88072001851", 1);
-	Relacja relacja3("98072001850", 2);
-	Relacja relacja4("98072001854", 1);
-	Relacja relacja5("68072001859", 4);
-	Relacja relacja6("68072001859", 3);*/
-
-	//bazaOsob.push_back(osoba1);
-	//bazaOsob.push_back(osoba2);
-	//bazaOsob.push_back(osoba3);
-	//bazaOsob.push_back(osoba4);
-
-
-
-	//bazaPojazdow.push_back(ptr);
-	//bazaPojazdow.push_back(ptr2);
-	//bazaPojazdow.push_back(ptr3);
-	//bazaPojazdow.push_back(ptr4);
-
-
-	//bazaRelacji.push_back(relacja1);
-	//bazaRelacji.push_back(relacja2);
-	//bazaRelacji.push_back(relacja3);
-	//bazaRelacji.push_back(relacja4);
-	//bazaRelacji.push_back(relacja5);
-	//bazaRelacji.push_back(relacja6);
-
-	char* podanyPESEL = new char[12] {"68072001859"};
-	string podanaMarka = "BMW";
 
 	MojWektor<Relacja> bazaRelacji;
 
@@ -596,180 +564,16 @@ int main() {
 
 	wczytajBazeRelacji(bazaRelacji);
 
-	samochodyOsobyZpodanymPESEL(podanyPESEL, bazaPojazdow, bazaOsob, bazaRelacji, pojazdyWynikowy);
+	string marka = "BMW";
 
-	osobyZpojazdemPodanejMarki(podanaMarka, bazaPojazdow, bazaOsob, bazaRelacji, OsobyWynikowy);
+	string PESEL = "98072001850";
 
-	ofstream myfile;
-	myfile.open("68072001859.txt");
-	for (auto pojazd : pojazdyWynikowy) {
-		myfile << *pojazd;
-	}
-	myfile.close();
+	zapiszPojazdy(samochodyOsobyZpodanymPESEL(PESEL, bazaPojazdow, bazaOsob, bazaRelacji, pojazdyWynikowy), PESEL);
 
-	ofstream myfile2;
-	myfile.open("BMW.txt");
-	for (auto osoba : OsobyWynikowy) {
-		myfile << osoba;
-	}
-	myfile.close();
-	//wczytajBazeOsob(bazaOsob);
-	//ifstream bazaOsobPlik;
-	//bazaOsobPlik.open("bazaOsobPlik.txt");
-	//while (bazaOsobPlik) {
-	//	string tempPESEL_str;
-	//	string tempImie_str;
-	//	string tempNazwisko_str;
-	//	string tempData_str;
-
-	//	bazaOsobPlik >> tempPESEL_str;
-	//	bazaOsobPlik >> tempImie_str;
-	//	bazaOsobPlik >> tempNazwisko_str;
-	//	bazaOsobPlik >> tempData_str;
-
-	//	char* tempPESEL = new char[tempPESEL_str.length() + 1];
-	//	char* tempImie = new char[tempImie_str.length() + 1];
-	//	char* tempNazwisko = new char[tempNazwisko_str.length() + 1];
-	//	char* tempData = new char[tempData_str.length() + 1];
-
-	//	strcpy(tempPESEL, tempPESEL_str.c_str());
-	//	strcpy(tempImie, tempImie_str.c_str());
-	//	strcpy(tempNazwisko, tempNazwisko_str.c_str());
-	//	strcpy(tempData, tempData_str.c_str());
-
-	//	Osoba tempOsoba{ tempPESEL,tempImie ,tempNazwisko,tempData };
-	//	if(tempPESEL_str.length()!=0)
-	//		bazaOsob.push_back(tempOsoba);
-	//	/*bazaOsobPlik >> tempImie;
-	//	bazaOsobPlik >> tempNazwisko;
-	//	bazaOsobPlik >> tempData;*/
-	//	/*tempPESEL.c_str();*/
-	//	delete[]tempPESEL;
-	//	delete[]tempImie;
-	//	delete[]tempNazwisko;
-	//	delete[]tempData;
-	//	//delete &tempOsoba;
-	//	
-	//}
-	//bazaOsobPlik.close();
-
-	//delete &bazaOsob;
-
-	//bazaOsob = wczytajBazeOsob(bazaOsob);
+	zapiszOsoby(osobyZpojazdemPodanejMarki(marka, bazaPojazdow, bazaOsob, bazaRelacji, OsobyWynikowy), marka);
 	
-	
-	
-
-	//ifstream bazaPojazdowPlik;
-	//bazaPojazdowPlik.open("bazaPojazdowPlik.txt");
-	//MojWektor<Pojazd*> bazaPojazdow;
-
-	//while (bazaPojazdowPlik) {
-	//	string rodzaj;
-	//	int id;
-	//	string marka;
-	//	string model;
-	//	int licznik;
-	//	string kolor;
-	//	double ladownosc;
-	//	bazaPojazdowPlik >> rodzaj;
-	//	if (rodzaj == "samochod") {
-	//		bazaPojazdowPlik >> id;
-	//		bazaPojazdowPlik >> marka;
-	//		bazaPojazdowPlik >> model;
-	//		bazaPojazdowPlik >> licznik;
-	//		bazaPojazdowPlik >> kolor;
-	//		Pojazd* samochod = new Samochod{ id,marka,model,licznik,kolor };
-	//		bazaPojazdow.push_back(samochod);
-	//		//samochod->~Pojazd();
-	//		//delete samochod;
-	//	}
-	//	if (rodzaj == "bus") {
-	//		bazaPojazdowPlik >> id;
-	//		bazaPojazdowPlik >> marka;
-	//		bazaPojazdowPlik >> model;
-	//		bazaPojazdowPlik >> licznik;
-	//		bazaPojazdowPlik >> kolor;
-	//		bazaPojazdowPlik >> ladownosc;
-	//		Pojazd* bus = new Bus{ id, marka, model, licznik, kolor, ladownosc };
-	//		bazaPojazdow.push_back(bus);
-	//		//(*bus).~Pojazd();
-	//		//delete bus;
-	//	}
-
-	//}
-	//bazaPojazdowPlik.close();
-	
-	/*for (auto osoba : OsobyWynikowy) {
-	* 
-		cout << osoba.getPESEL() << " " << osoba.getImie() << " " << osoba.getNazwisko() << " " << osoba.getData() << endl;
-	}*/
-	//osobyZpojazdemPodanejMarki(podanaMarka, bazaPojazdow, bazaOsob, bazaRelacji, OsobyWynikowy);
-	/*cout << "pojazdy wynikowe" << endl;
-	for (auto pojazd : pojazdyWynikowy) {
-		cout << pojazd->getId() << " " << pojazd->getMarka() << endl;
-	}*/
-
-	//for (auto pojazd : pojazdyWynikowy) {
-	//	cout << pojazd->getId() << endl;
-	//}
-	/*for (auto osoba : OsobyWynikowy) {
-		cout << osoba.getFullName() << endl;
-	}*/
-
-	
-
-	/*for (auto osoba : OsobyWynikowy) {
-			osoba.~Osoba();
-	}
-	for (auto osoba : bazaOsob) {
-		osoba.~Osoba();
-	}*/
 	for (auto pojazd : bazaPojazdow) {
 		delete [] pojazd;
 	}
-	/*for (auto pojazd : pojazdyWynikowy) {
-		delete[] pojazd;
-	}*/
-	//delete &bazaPojazdow;
-
-	/*delete[] tempDataUrodzenia1;
-	delete[] tempDataUrodzenia2;
-	delete[] tempDataUrodzenia3;
-	delete[] tempDataUrodzenia4;
-
-	delete[] tempPESEL1;
-	delete[] tempPESEL2;
-	delete[] tempPESEL3;
-	delete[] tempPESEL4;
-
-	delete[] tempImie1;
-	delete[] tempImie2;
-	delete[] tempImie3;
-	delete[] tempImie4;
-
-	delete[] tempNazwisko1;
-	delete[] tempNazwisko2;
-	delete[] tempNazwisko3;
-	delete[] tempNazwisko4;*/
-
-	delete[] podanyPESEL;
-	
-
-	//ptr->~Pojazd();
-	//ptr2->~Pojazd();
-	//ptr3->~Pojazd();
-	//ptr4->~Pojazd();
-
-	//delete[] ptr;
-	//delete[] ptr2;
-	//delete[] ptr3;
-	//delete[] ptr4;
-
-		
 		return 0;
-	
-	
-	
-	//MojWektor<Relacja> bazaRelacji;
 }
