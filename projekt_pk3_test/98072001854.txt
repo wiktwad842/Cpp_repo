@@ -1,0 +1,1 @@
+Pojazd nr: 1, marka: Volvo, model: 740,  stan licznika: 20000, kolor: brazowy
