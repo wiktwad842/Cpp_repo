@@ -116,7 +116,11 @@ MojWektor<TypDanych>::end() const
 	return iterator(arr + iloscObiektow);
 }
 
-
+std::ofstream& operator<< (std::ofstream& o, const Pojazd& b)
+{
+	b.print(o);
+	return o;
+}
 
 MojWektor<Pojazd*>& samochodyOsobyZpodanymPESEL(string podanyPESEL_str, const MojWektor<Pojazd*>& bazaPojazdow,const MojWektor<Osoba> &bazaOsob,
 											 const MojWektor<Relacja>& bazaRelacji, MojWektor<Pojazd*>& pojazdyWynikowy) {
@@ -143,6 +147,7 @@ MojWektor<Pojazd*>& samochodyOsobyZpodanymPESEL(string podanyPESEL_str, const Mo
 MojWektor<Osoba>& osobyZpojazdemPodanejMarki(string podanaMarka, const MojWektor<Pojazd*>& bazaPojazdow, const MojWektor<Osoba>& bazaOsob,
 	const MojWektor<Relacja>& bazaRelacji, MojWektor<Osoba>& osobyWynikowy) 
 {
+	bool duplikat;
 	for (auto pojazd : bazaPojazdow){
 		if (pojazd->getMarka() == podanaMarka){
 			for (auto relacja : bazaRelacji){
@@ -150,7 +155,7 @@ MojWektor<Osoba>& osobyZpojazdemPodanejMarki(string podanaMarka, const MojWektor
 				strcpy(temp, relacja.szukajPESELDlaId(pojazd->getId()).c_str());
 				for (auto osoba : bazaOsob){
 					if (osoba.szukajPesel(temp)){
-						bool duplikat{ false };
+						duplikat = false;
 						if (osobyWynikowy.size() == 0){
 
 							osobyWynikowy.push_back(osoba);
@@ -158,7 +163,7 @@ MojWektor<Osoba>& osobyZpojazdemPodanejMarki(string podanaMarka, const MojWektor
 						else{
 
 							for (auto osobaWynikowa : osobyWynikowy){
-								if (osoba.getPESEL() != osobaWynikowa.getPESEL())
+								if (osoba.getPESEL() == osobaWynikowa.getPESEL())
 									duplikat = true;
 								
 							}
@@ -166,6 +171,7 @@ MojWektor<Osoba>& osobyZpojazdemPodanejMarki(string podanaMarka, const MojWektor
 								osobyWynikowy.push_back(osoba);
 						}
 					}	
+					duplikat = true;
 				}delete[] temp;
 			}
 		}
