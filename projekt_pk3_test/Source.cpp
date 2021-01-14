@@ -179,10 +179,10 @@ MojWektor<Osoba>& osobyZpojazdemPodanejMarki(string podanaMarka, const MojWektor
 	return osobyWynikowy;
 }
 
-MojWektor<Osoba>& wczytajBazeOsob(MojWektor<Osoba>&bazaOsob) {
+MojWektor<Osoba>& wczytajBazeOsob(MojWektor<Osoba>&bazaOsob,char*nazwaPliku) {
 	MojWektor<Osoba> temp;
 	ifstream bazaOsobPlik;
-	bazaOsobPlik.open("bazaOsob.txt");
+	bazaOsobPlik.open(nazwaPliku);
 	while (bazaOsobPlik) {
 		string tempPESEL_str;
 		string tempImie_str;
@@ -222,9 +222,9 @@ MojWektor<Osoba>& wczytajBazeOsob(MojWektor<Osoba>&bazaOsob) {
 	return bazaOsob;
 }
 
-MojWektor<Pojazd*>& wczytajBazePojazdow(MojWektor<Pojazd*>& bazaPojazdow) {
+MojWektor<Pojazd*>& wczytajBazePojazdow(MojWektor<Pojazd*>& bazaPojazdow,char*nazwaPliku) {
 	ifstream bazaPojazdowPlik;
-	bazaPojazdowPlik.open("bazaPojazdow.txt");
+	bazaPojazdowPlik.open(nazwaPliku);
 
 	while (bazaPojazdowPlik) {
 		string rodzaj;
@@ -264,10 +264,10 @@ MojWektor<Pojazd*>& wczytajBazePojazdow(MojWektor<Pojazd*>& bazaPojazdow) {
 	return bazaPojazdow;
 }
 
-MojWektor<Relacja>& wczytajBazeRelacji(MojWektor<Relacja>& bazaRelacji) {
+MojWektor<Relacja>& wczytajBazeRelacji(MojWektor<Relacja>& bazaRelacji,char*nazwaPliku) {
 
 	ifstream bazaRelacjiPlik;
-	bazaRelacjiPlik.open("bazaRelacji.txt");
+	bazaRelacjiPlik.open(nazwaPliku);
 
 	while (bazaRelacjiPlik) {
 		Relacja temp;
@@ -298,36 +298,43 @@ void zapiszOsoby(MojWektor<Osoba>& wektorOsob, string nazwaPliku) {
 	myfile2.close();
 }
 
-int main() {
-
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-	MojWektor<Relacja> bazaRelacji;
-
-	MojWektor<Osoba> bazaOsob;
-
-	MojWektor<Pojazd*> bazaPojazdow;
-
-	MojWektor<Pojazd*> pojazdyWynikowy;
-
-	MojWektor<Osoba> OsobyWynikowy;
-
-	wczytajBazeOsob(bazaOsob);
-
-	wczytajBazePojazdow(bazaPojazdow);
-
-	wczytajBazeRelacji(bazaRelacji);
-
-	string marka = "BMW";
-
-	string PESEL = "68072001859";
-
-	zapiszPojazdy(samochodyOsobyZpodanymPESEL(PESEL, bazaPojazdow, bazaOsob, bazaRelacji, pojazdyWynikowy), PESEL);
-
-	zapiszOsoby(osobyZpojazdemPodanejMarki(marka, bazaPojazdow, bazaOsob, bazaRelacji, OsobyWynikowy), marka);
+int main(int argc,char*argv[]) {
 	
-	for (auto pojazd : bazaPojazdow) {
-		delete [] pojazd;
-	}
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+		MojWektor<Relacja> bazaRelacji;
+
+		MojWektor<Osoba> bazaOsob;
+
+		MojWektor<Pojazd*> bazaPojazdow;
+
+		MojWektor<Pojazd*> pojazdyWynikowy;
+
+		MojWektor<Osoba> OsobyWynikowy;
+
+		wczytajBazeOsob(bazaOsob, argv[1]);
+
+		wczytajBazePojazdow(bazaPojazdow, argv[2]);
+
+		wczytajBazeRelacji(bazaRelacji, argv[3]);
+
+		string marka = "Volvo";
+		//string marka2 = "BMW";
+
+		string PESEL = "98575364885";
+		//string PESEL2 = "99999999999";
+		//string PESEL2 = "99999999999";
+		//string PESEL2 = "99999999999";
+
+
+
+		zapiszPojazdy(samochodyOsobyZpodanymPESEL(PESEL, bazaPojazdow, bazaOsob, bazaRelacji, pojazdyWynikowy), PESEL);
+		zapiszOsoby(osobyZpojazdemPodanejMarki(marka, bazaPojazdow, bazaOsob, bazaRelacji, OsobyWynikowy), marka);
+
+
+		for (auto pojazd : bazaPojazdow) {
+			delete[] pojazd;
+		}
+	
 		return 0;
 }

@@ -1,2 +1,0 @@
-Pojazd nr: 1, marka: Volvo, model: 740,  stan licznika: 20000, kolor: brazowy
-Pojazd nr: 2, marka: Ford, model: Ka,  stan licznika: 46000, kolor: fioletowy

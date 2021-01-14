@@ -1,3 +1,0 @@
-PESEL: 98072001854, imie: Przemek, nazwisko: Dzban, data urodzenia: 05.07.1998
-PESEL: 55555555555, imie: di, nazwisko: fu, data urodzenia: 20.07.1994
-PESEL: 98575364885, imie: Robert, nazwisko: lewandowski, data urodzenia: 20.07.1994

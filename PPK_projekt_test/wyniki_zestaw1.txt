@@ -1,0 +1,82 @@
+RAPORT zestaw1.txt : 
+
+####################
+# DANE WEJSCIOWE : #
+####################
+
+Macierz A :
+10	1	1	1	2	
+3	20	4	2	1	
+5	1	40	9	5	
+3	0	1	10	1	
+6	2	1	1	20	
+
+Wektor B :
+15
+30
+60
+15
+30
+
+Dokladnosc Epsilon : 0.0001
+Maksymalna liczba iteracji : 30
+
+
+####################
+# DANE POSREDNIE : #
+####################
+
+Macierz Alfa :
+0	-0.1	-0.1	-0.1	-0.2	
+-0.15	0	-0.2	-0.1	-0.05	
+-0.125	-0.025	0	-0.225	-0.125	
+-0.3	-0	-0.1	0	-0.1	
+-0.3	-0.1	-0.05	-0.05	0	
+
+Wektor Beta :
+1.5
+1.5
+1.5
+1.5
+1.5
+ 
+
+#####################
+# WYNIKI OBLICZEN : #
+#####################
+
+Wektor przedostatnio wykonanej iteracji : 
+0.9999454871
+0.9999221652
+0.9999462194
+1.000008901
+1.000026381
+
+Wektor ostatnio wykonanej iteracji : 
+1.000006995
+1.000007498
+0.9999936377
+0.9999958996
+0.9999976748
+ 
+Liczba wykonanych iteracji: 6
+
+
+#############
+# ANALIZA : #
+#############
+
+Blad bezwzgledny rozwiazania : 
+0.0000069951
+0.0000074976
+0.0000063623
+0.0000041004
+0.0000023252
+
+Warunki zbieznosci:
+
+Norma I Macierzy Alfa: 0.5
+Norma II Macierzy Alfa: 0.875
+Norma III Macierzy Alfa: 0.6652067348
+
+Warunki zbieznosci zostaly spelnione.
